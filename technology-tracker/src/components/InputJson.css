@@ -1,0 +1,22 @@
+.input-json {
+  background: transparent;
+  text-align: center;
+}
+
+.file-input-label {
+  display: inline-block;
+  padding: 12px 24px;
+  background: #011e3d;
+  color: white;
+  border-radius: 99rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.file-input-label:hover {
+  background: #003e80;
+}
+
+.file-input {
+  display: none;
+}
