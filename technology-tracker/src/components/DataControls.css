@@ -1,0 +1,153 @@
+:root {
+  --animdur: 0.4s;
+}
+
+.file-input,
+.file-export {
+  display: none;
+}
+
+.input-json,
+.export-json {
+  background: transparent;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #011e3d;
+  color: white;
+  border-radius: 99rem;
+  cursor: pointer;
+  font-weight: 600;
+  height: 50px;
+  transition: all var(--animdur);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  position: absolute;
+  width: 300px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  user-select: none;
+}
+
+.input-json {
+  z-index: 1;
+}
+
+.input-json.animLeft {
+  transform-origin: left;
+  animation: l var(--animdur) forwards;
+}
+
+@keyframes l {
+  0% {
+    scale: 1 1;
+    translate: -70px 0;
+    width: 160px;
+    border-radius: 100rem 0 0 100rem;
+  }
+  50% {
+    scale: 1.2 1;
+  }
+  100% {
+    width: 300px;
+    translate: -160px 0;
+    scale: 1 1;
+  }
+}
+
+@keyframes r {
+  0% {
+    scale: 1 1;
+    translate: 70px 0;
+    width: 160px;
+    border-radius: 0 100rem 100rem 0;
+  }
+  50% {
+    scale: 1.2 1;
+  }
+  100% {
+    translate: 160px 0;
+    scale: 1 1;
+  }
+}
+
+.export-json.animRight {
+  transform-origin: left;
+  background: rgb(0, 51, 179);
+  animation: r var(--animdur) forwards;
+}
+
+.export-json.animRight > span {
+  animation: t var(--animdur) forwards;
+}
+
+.input-json > span {
+  transition: all var(--animdur);
+  margin-left: 0;
+}
+
+.input-json.animLeft > span {
+  animation: tL var(--animdur) forwards;
+}
+
+.input-json:hover {
+  background: #054e9b;
+}
+
+.export-json {
+  transform-origin: right;
+  overflow: hidden;
+}
+.export-json.hidden {
+  border-radius: 100rem;
+  width: 300px;
+  background: #011e3d;
+  overflow: hidden;
+}
+
+.export-json > span {
+  transition: all var(--animdur) ease-out;
+}
+
+.export-json:hover {
+  background: rgb(0, 76, 255);
+}
+
+.input-json.hidden {
+  border-radius: 100rem;
+  translate: 0 0;
+  width: 300px;
+  z-index: 1;
+}
+
+.export-json.hidden > span {
+  opacity: 0;
+}
+
+@keyframes t {
+  0% {
+    filter: blur(0);
+  }
+  50% {
+    filter: blur(10px);
+  }
+  100% {
+    filter: blur(0);
+  }
+}
+
+@keyframes tL {
+  0% {
+    margin-left: 140px;
+    filter: blur(0);
+  }
+  50% {
+    filter: blur(10px);
+  }
+  100% {
+    filter: blur(0);
+    margin-left: 0;
+  }
+}

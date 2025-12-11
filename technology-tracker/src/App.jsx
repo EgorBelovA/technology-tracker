@@ -1,45 +1,35 @@
-import { useState } from 'react';
-import TechnologyCard from './components/TechnologyCard';
-import InputJson from './components/InputJson';
-import './App.css';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+// import SettingsPage from './pages/Settings';
+// import Header from './features/header/Header.js';
+// import StatisticsPage from './pages/statistics.js';
+import HomePage from './pages/Home';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
+const muiTheme = createTheme({
+  palette: {
+    primary: {
+      main: '#1976d2',
+    },
+    secondary: {
+      main: '#dc004e',
+    },
+  },
+});
 
 function App() {
-  const [technologies, setTechnologies] = useState([]);
-
-  const handleJsonLoad = (data) => {
-    const technologiesArray = Object.entries(data).map(([id, techData]) => ({
-      id,
-      ...techData,
-      status: 'not-started',
-    }));
-
-    setTechnologies(technologiesArray);
-  };
-
-  const updateTechnologyStatus = (id, newStatus) => {
-    setTechnologies((prev) =>
-      prev.map((tech) =>
-        tech.id === id ? { ...tech, status: newStatus } : tech
-      )
-    );
-  };
-
   return (
-    <div className='app'>
-      <h1>RoadMap Tracker</h1>
-
-      <InputJson onJsonLoad={handleJsonLoad} />
-
-      <div className='technologies-list'>
-        {technologies.map((technology) => (
-          <TechnologyCard
-            key={technology.id}
-            technology={technology}
-            onStatusChange={updateTechnologyStatus}
-          />
-        ))}
-      </div>
-    </div>
+    <ThemeProvider theme={muiTheme}>
+      <CssBaseline />
+      <Router basename='/technology-tracker/'>
+        {/* <Header /> */}
+        <Routes>
+          <Route path='/' element={<HomePage />} />
+          {/* <Route path='/settings' element={<SettingsPage />} /> */}
+          {/* <Route path='/statistics' element={<StatisticsPage />} /> */}
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
 }
 

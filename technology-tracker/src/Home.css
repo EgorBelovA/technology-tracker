@@ -1,0 +1,97 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  /* user-select: none; */
+  appearance: none;
+}
+
+html,
+body {
+  background-color: #e8e8e9;
+  touch-action: manipulation;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+.app {
+  max-width: 660px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    sans-serif;
+  font-weight: 400;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* transform: translate(0, 0); */
+}
+
+input,
+textarea,
+select {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    sans-serif;
+  font-weight: 400;
+}
+
+#root {
+  max-height: 100%;
+}
+
+.app h1 {
+  text-align: center;
+  color: #333;
+}
+
+.technologies-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.data-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  height: 70px;
+  position: relative;
+}
+
+.sad-emoji {
+  font-size: 5rem;
+  text-align: center;
+  user-select: none;
+}
+
+.no-technologies {
+  margin-top: 20px;
+  animation: noTechnologies 0.4s;
+}
+
+@keyframes noTechnologies {
+  0% {
+    opacity: 0;
+    scale: 0;
+  }
+  50% {
+    opacity: 1;
+    scale: 1.1;
+  }
+  100% {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+.sticky-container {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}

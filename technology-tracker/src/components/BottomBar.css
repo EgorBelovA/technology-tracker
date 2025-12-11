@@ -1,0 +1,11 @@
+.bottom-bar-container {
+  height: 40px;
+  width: 100%;
+  position: fixed;
+  bottom: 10px;
+  border-radius: 99rem;
+  /* background-color: #fff; */
+  border: 1px solid #999;
+  backdrop-filter: blur(10px);
+  margin: auto;
+}

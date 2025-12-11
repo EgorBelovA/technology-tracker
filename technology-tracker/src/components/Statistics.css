@@ -1,0 +1,146 @@
+.statistics {
+  /* background: #f1fbff; */
+  border-radius: 20px;
+  padding: 16px;
+  margin-bottom: 10px;
+  /* background-color: transparent; */
+  border: 1px solid #999;
+  position: relative;
+  backdrop-filter: blur(10px);
+}
+
+.statistics h2 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.no-data {
+  text-align: center;
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* Секция общего прогресса */
+.progress-section {
+  margin-bottom: 20px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background-color: #e8e8e9;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 0.5px solid #999;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #28a745, #20c997);
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+/* Статистика по статусам */
+.status-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px;
+  border-radius: 6px;
+  border-left: 4px solid;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.stat-item.completed {
+  background-color: #d4edda;
+  border-left-color: #28a745;
+}
+
+.stat-item.in-progress {
+  background-color: #fff3cd;
+  border-left-color: #ffc107;
+}
+
+.stat-item.not-started {
+  background-color: #f8d7da;
+  border-left-color: #dc3545;
+}
+
+.stat-label {
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.stat-count {
+  font-weight: 600;
+}
+
+.stat-percentage {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+/* График распределения */
+.distribution-chart h4 {
+  margin: 0 0 10px 0;
+  color: #495057;
+}
+
+.chart-bars {
+  display: flex;
+  height: 10px;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #e9ecef;
+}
+
+.chart-bar {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.chart-bar.completed {
+  background-color: #28a745;
+}
+
+.chart-bar.in-progress {
+  background-color: #ffc107;
+}
+
+.chart-bar.not-started {
+  background-color: #dc3545;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .status-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+}
