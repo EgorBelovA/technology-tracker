@@ -1,0 +1,22 @@
+.settings-button {
+  cursor: pointer;
+  margin: 10px 0;
+  font-weight: 500;
+  border-radius: 99rem;
+  padding: 10px 20px;
+  border: 2px solid rgba(127, 127, 127, 0.5);
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    border: 2px solid rgba(127, 127, 127, 1);
+  }
+
+  &.logout {
+    background-color: #dc3545;
+    color: #fff;
+
+    &:hover {
+      background-color: #c82333;
+    }
+  }
+}

@@ -5,9 +5,10 @@ import QuickActions from '../components/QuickActions';
 import Search from '../components/Search';
 import '../Home.css';
 import { useLoadRoadmap } from '../hooks/useLoadRoadmap';
+import FilterOptions from '../components/FilterOptions';
 
 import { useTech } from '../context/TechnologiesContext';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useEffect } from 'react';
 
 export default function HomePage() {
@@ -16,42 +17,60 @@ export default function HomePage() {
     showExport,
     scrollUpVisible,
     selectedCards,
+    toggleCardSelection,
     selectCards,
+    setSelectCards,
 
     handleJsonLoad,
     updateTechnologyStatus,
     updateAllStatuses,
     handleRandomSelect,
     scrollToTop,
-    toggleCardSelection,
-    toggleSelectMode,
+    updateSelectedCardsStatus,
   } = useTech();
 
-  const { ROADMAPS, loadRoadmap } = useLoadRoadmap();
-
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const filteredTechnologies = technologies.filter((t) => {
-    const q = searchQuery.toLowerCase();
-    return (
-      t.title?.toLowerCase().includes(q) ||
-      t.description?.toLowerCase().includes(q)
-    );
-  });
-
+  const { ROADMAPS, loadRoadmap, userUrlRoadmap } = useLoadRoadmap();
   const [isApi, setIsApi] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showFilterOptions, setShowFilterOptions] = useState(false);
+  const [filterStatus, setFilterStatus] = useState('all');
 
-  const [searchPlaceholder, setSearchPlaceholder] = useState(
-    'Search Technologies by title or description '
+  function filterByFields(list, query, fields) {
+    if (!query.trim()) return list;
+
+    const q = query.toLowerCase();
+
+    return list.filter((item) =>
+      fields.some((field) => item[field]?.toString().toLowerCase().includes(q))
+    );
+  }
+
+  const filteredTechnologies = useMemo(
+    () =>
+      filterByFields(technologies, searchQuery, ['title', 'description', 'id']),
+    [technologies, searchQuery]
   );
 
   useEffect(() => {
     if (isApi) {
-      setSearchPlaceholder('Search RoadMap • API');
-    } else {
-      setSearchPlaceholder('Search Technologies by title or description');
+      userUrlRoadmap(searchQuery);
     }
-  }, [isApi]);
+  }, [isApi, searchQuery]);
+
+  const filteredAPIs = useMemo(
+    () => filterByFields(ROADMAPS, searchQuery, ['label']),
+    [ROADMAPS, searchQuery]
+  );
+
+  const filteredList = useMemo(() => {
+    if (filterStatus === 'all') return filteredTechnologies;
+    return filteredTechnologies.filter((tech) => tech.status === filterStatus);
+  }, [isApi, filterStatus, filteredTechnologies, filteredAPIs]);
+
+  const handleFilterSelect = (value) => {
+    setFilterStatus(value);
+    setShowFilterOptions(false);
+  };
 
   return (
     <>
@@ -61,10 +80,10 @@ export default function HomePage() {
         onRandomSelect={handleRandomSelect}
         scrollUpVisible={scrollUpVisible}
         scrollToTop={scrollToTop}
-        handleSelectCards={toggleSelectMode}
-        selectCards={selectCards}
+        selectMode={selectCards}
+        setSelectMode={setSelectCards}
         selectedCardsAmount={selectedCards.length}
-        setSelectedCardsStatus={updateTechnologyStatus}
+        setSelectedCardsStatus={updateSelectedCardsStatus}
       />
 
       <div className='sticky-container'>
@@ -73,21 +92,30 @@ export default function HomePage() {
             onJsonLoad={handleJsonLoad}
             showExport={showExport}
             setIsApi={setIsApi}
+            isApi={isApi}
           />
           <ExportJson jsonData={technologies} />
         </div>
-
-        <Search
-          technologies={technologies}
-          query={searchQuery}
-          setQuery={setSearchQuery}
-          placeholder={searchPlaceholder}
-        />
       </div>
 
+      <Search
+        query={searchQuery}
+        setQuery={setSearchQuery}
+        isApi={isApi}
+        count={isApi ? filteredAPIs.length : filteredList.length}
+        setShowOptions={setShowFilterOptions}
+        showFilterButton={!isApi}
+      />
+
       <div className='content-wrapper'>
+        <FilterOptions
+          showOptions={showFilterOptions}
+          setShowOptions={setShowFilterOptions}
+          status={filterStatus}
+          handleSelect={handleFilterSelect}
+        />
         <div className={`roadmaps ${isApi ? 'visible' : ''}`}>
-          {ROADMAPS.map((r) => (
+          {filteredAPIs.map((r) => (
             <div
               key={r.id}
               className='roadmap-card'
@@ -101,21 +129,20 @@ export default function HomePage() {
           ))}
         </div>
         <div className={`technologies-list ${isApi ? '' : 'visible'}`}>
-          {filteredTechnologies.length === 0 ? (
+          {filteredList.length === 0 ? (
             <div className='no-technologies'>
               <h4>No technologies found</h4>
               <div className='sad-emoji'>😞</div>
             </div>
           ) : (
-            filteredTechnologies.map((technology) => (
+            filteredList.map((technology) => (
               <TechnologyCard
                 key={technology.id}
                 technology={technology}
                 onStatusChange={updateTechnologyStatus}
-                selectCards={selectCards}
-                selectCard={(isSelected) =>
-                  toggleCardSelection(technology, isSelected)
-                }
+                selectMode={selectCards}
+                isSelected={selectedCards.some((t) => t.id === technology.id)}
+                onSelect={toggleCardSelection}
               />
             ))
           )}

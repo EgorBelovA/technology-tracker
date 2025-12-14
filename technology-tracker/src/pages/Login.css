@@ -1,0 +1,47 @@
+.login-container {
+  margin: 0 auto;
+  width: min(100%, 400px);
+}
+
+.login-input {
+  width: 100%;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  background-color: transparent;
+  border-radius: 99rem;
+  font-size: 16px;
+}
+
+.login-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #2c9fe6;
+  color: #fff;
+  border: none;
+  border-radius: 99rem;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.login-icon {
+  font-size: 200px;
+  text-align: center;
+  scale: 1;
+  transition: all 0.3s ease-in-out;
+  user-select: none;
+  animation: icon-appear 0.3s ease-in-out;
+
+  &:active {
+    scale: 0.9;
+  }
+}
+
+@keyframes icon-appear {
+  0% {
+    scale: 0;
+  }
+  100% {
+    scale: 1;
+  }
+}

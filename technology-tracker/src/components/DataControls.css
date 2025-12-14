@@ -24,7 +24,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   position: absolute;
-  width: 300px;
+  width: calc(50% - 10px);
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -40,15 +40,15 @@
   0% {
     scale: 1 1;
     translate: -70px 0;
-    width: 160px;
+    width: calc(25% - 20px);
     border-radius: 100rem 0 0 100rem;
   }
   50% {
     scale: 1.2 1;
   }
   100% {
-    width: 300px;
-    translate: -160px 0;
+    width: calc(50% - 10px);
+    translate: calc(-50% - 10px) 0;
     scale: 1 1;
   }
 }
@@ -57,14 +57,14 @@
   0% {
     scale: 1 1;
     translate: 70px 0;
-    width: 160px;
+    width: calc(25% - 20px);
     border-radius: 0 100rem 100rem 0;
   }
   50% {
     scale: 1.2 1;
   }
   100% {
-    translate: 160px 0;
+    translate: calc(50% + 10px) 0;
     scale: 1 1;
   }
 }
@@ -72,6 +72,12 @@
 .export-json.animRight {
   transform-origin: left;
   background: rgb(0, 51, 179);
+  box-shadow: 0 1px 1px 0 #477db7 inset;
+  background-image: linear-gradient(
+    180deg,
+    rgba(122, 144, 254, 0.15),
+    rgba(122, 144, 254, 0)
+  );
   animation: r var(--animdur) forwards;
 }
 
@@ -84,7 +90,13 @@
   margin-left: 0;
 }
 
-.input-json.animLeft > div > div > span {
+.input-json.animLeft > div {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.input-json.animLeft > div > span {
   animation: tL var(--animdur) forwards;
 }
 
@@ -95,7 +107,15 @@
 .export-json {
   transform-origin: right;
   overflow: hidden;
+  padding: 0 10px;
 }
+
+.export-json > span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .export-json.hidden {
   border-radius: 100rem;
   width: 300px;
@@ -109,6 +129,7 @@
 
 .export-json:hover {
   background: rgb(0, 76, 255);
+  box-shadow: 0 1px 1px 0 #5d90c6 inset;
 }
 
 .input-json.hidden {
@@ -175,6 +196,9 @@
   z-index: 999;
   border: 0 solid transparent;
   line-height: 50px;
+  max-width: 100%;
+  min-width: 50%;
+  padding: 0 10px;
 
   &.visible {
     visibility: visible;
@@ -182,31 +206,43 @@
   }
 
   &.left {
-    border-right-width: 10px;
-    border-top-width: 50px;
-    border-top-color: #011e3d;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+    height: 50px;
+    background-color: #011e3d;
+    clip-path: polygon(0 0, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
 
-    div {
-      transform: translateY(-100%);
-    }
+    box-shadow: 0 1px 1px 0 #124881 inset;
+    background-image: linear-gradient(
+      180deg,
+      rgba(122, 144, 254, 0.15),
+      rgba(122, 144, 254, 0)
+    );
 
     &:hover {
-      border-top-color: #054e9b;
+      background-color: #083769;
+      box-shadow: 0 1px 1px 0 #2e5d8f inset;
     }
   }
 
   &.right {
-    border-left-width: 10px;
-    border-bottom-width: 50px;
-    border-bottom-color: #011e3d;
-    margin-left: -5px;
+    margin-left: -6px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+    height: 50px;
+    background-color: #011e3d;
+    clip-path: polygon(10px 0, 100% 0%, 100% 100%, 0% 100%);
+
+    box-shadow: 0 1px 1px 0 #124881 inset;
+    background-image: linear-gradient(
+      180deg,
+      rgba(122, 144, 254, 0.2),
+      rgba(122, 144, 254, 0)
+    );
 
     &:hover {
-      border-bottom-color: #054e9b;
+      background-color: #083769;
+      box-shadow: 0 1px 1px 0 #2e5d8f inset;
     }
   }
 }

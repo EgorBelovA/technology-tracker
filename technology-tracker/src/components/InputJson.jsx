@@ -1,7 +1,7 @@
 import './DataControls.css';
 import { useEffect, useRef, useState } from 'react';
 
-function InputJson({ onJsonLoad, showExport, setIsApi }) {
+function InputJson({ onJsonLoad, showExport, setIsApi, isApi }) {
   const fileInputRef = useRef(null);
   const [showOptions, setShowOptions] = useState(false);
 
@@ -54,9 +54,7 @@ function InputJson({ onJsonLoad, showExport, setIsApi }) {
         }`}
         onClick={handleDivClick}
       >
-        <div>
-          <span>Upload File</span>
-        </div>
+        <span>Upload File</span>
       </div>
       <div
         className={`input-json-option right ${
@@ -65,12 +63,10 @@ function InputJson({ onJsonLoad, showExport, setIsApi }) {
         onClick={(e) => {
           e.stopPropagation();
           setShowOptions(false);
-          setIsApi(true);
+          setIsApi(!isApi);
         }}
       >
-        <div>
-          <span>API</span>
-        </div>
+        <span>API {isApi ? `(Close)` : ''}</span>
       </div>
       <input
         type='file'

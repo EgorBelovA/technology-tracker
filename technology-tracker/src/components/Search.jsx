@@ -1,27 +1,35 @@
+import { useState } from 'react';
+import FilterButton from './FilterButton';
 import './Search.css';
+import { useEffect } from 'react';
 
-function filterTechnologies(list, query) {
-  if (!query.trim()) return [];
-  const q = query.toLowerCase();
-  return list.filter(
-    (t) =>
-      t.title?.toLowerCase().includes(q) ||
-      t.description?.toLowerCase().includes(q)
-  );
-}
-
-export default function Search({ technologies, query, setQuery, placeholder }) {
-  const filtered = filterTechnologies(technologies, query);
+export default function Search({
+  query,
+  setQuery,
+  isApi,
+  count,
+  setShowOptions = () => {},
+  showFilterButton = false,
+}) {
+  useEffect(() => {
+    setQuery('');
+  }, [isApi]);
   return (
     <div className='search-container'>
       <input
         className='search-input'
-        type='text'
-        placeholder={placeholder}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
+        placeholder={
+          isApi
+            ? 'Search RoadMap • API'
+            : 'Search Technologies by title or description'
+        }
       />
-      {query && <span className='search-count'>{filtered.length}</span>}
+      <span className='search-count-filter-container'>
+        {query && <span className='search-count'>{count}</span>}
+        {showFilterButton && <FilterButton setShowOptions={setShowOptions} />}
+      </span>
     </div>
   );
 }

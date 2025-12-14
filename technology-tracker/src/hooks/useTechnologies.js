@@ -80,10 +80,18 @@ export function useTechnologies() {
     setTechnologies(newTech);
   };
 
-  const updateTechnologyStatus = (id, newStatus, deadline, progressNote) => {
+  const updateTechnologyStatus = (
+    id,
+    newStatus,
+    deadline,
+    progressNote,
+    links
+  ) => {
     setTechnologies((prev) =>
       prev.map((t) =>
-        t.id === id ? { ...t, status: newStatus, deadline, progressNote } : t
+        t.id === id
+          ? { ...t, status: newStatus, deadline, progressNote, links }
+          : t
       )
     );
     notify('Technology status updated', 'success');
@@ -99,19 +107,40 @@ export function useTechnologies() {
     setTechnologies((prev) => prev.map((t) => ({ ...t, status: newStatus })));
   };
 
-  const handleRandomSelect = (techId) => {
-    setSelectedTech(techId);
+  const handleRandomSelect = () => {
+    const notCompleted = technologies.filter(
+      (tech) => tech.status !== 'completed'
+    );
+    if (notCompleted.length === 0) return;
 
-    const el = document.getElementById(techId);
-    if (el) {
-      el.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
+    const randomTech =
+      notCompleted[Math.floor(Math.random() * notCompleted.length)];
+    setSelectedTech(randomTech.id);
 
-      el.classList.add('highlighted');
-      setTimeout(() => el.classList.remove('highlighted'), 500);
-    }
+    const el = document.getElementById(randomTech.id);
+    if (!el) return;
+
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    const observer = new IntersectionObserver(
+      (entries, observerInstance) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            el.classList.add('highlighted');
+
+            setTimeout(() => el.classList.remove('highlighted'), 1000);
+
+            observerInstance.disconnect();
+          }
+        });
+      },
+      {
+        root: null,
+        threshold: 1,
+      }
+    );
+
+    observer.observe(el);
   };
 
   useEffect(() => {
@@ -121,22 +150,40 @@ export function useTechnologies() {
   }, []);
 
   const scrollToTop = () => {
+    window.scrollTo({ top: Math.min(window.scrollY, 1500) });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const toggleCardSelection = (technology, isSelected) => {
-    setSelectedCards((prev) =>
-      isSelected
-        ? [...prev, technology]
-        : prev.filter((t) => t.id !== technology.id)
-    );
+  const toggleCardSelection = (technology) => {
+    setSelectedCards((prev) => {
+      const exists = prev.some((t) => t.id === technology.id);
+      return exists
+        ? prev.filter((t) => t.id !== technology.id)
+        : [...prev, technology];
+    });
   };
 
+  const toggleSelectMode = () => setSelectCards((v) => !v);
+
   useEffect(() => {
-    setSelectedCards([]);
+    if (!selectCards) {
+      setSelectedCards([]);
+    }
   }, [selectCards]);
 
-  const toggleSelectMode = () => setSelectCards((v) => !v);
+  const updateSelectedCardsStatus = (newStatus) => {
+    setTechnologies((prev) =>
+      prev.map((t) =>
+        selectedCards.some((s) => s.id === t.id)
+          ? { ...t, status: newStatus }
+          : t
+      )
+    );
+    notify(
+      `Selected cards marked as "${newStatus.replace('-', ' ')}"`,
+      'success'
+    );
+  };
 
   return {
     technologies,
@@ -146,6 +193,7 @@ export function useTechnologies() {
     scrollUpVisible,
     selectedCards,
     selectCards,
+    selectedCardsAmount: selectedCards.length,
 
     handleJsonLoad,
     updateTechnologyStatus,
@@ -155,5 +203,7 @@ export function useTechnologies() {
     scrollToTop,
     toggleCardSelection,
     toggleSelectMode,
+    updateSelectedCardsStatus,
+    setSelectCards,
   };
 }

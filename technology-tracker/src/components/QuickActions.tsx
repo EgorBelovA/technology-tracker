@@ -9,7 +9,8 @@ const QuickActions = ({
   scrollUpVisible,
   scrollToTop,
   handleSelectCards,
-  selectCards,
+  selectMode,
+  setSelectMode,
   selectedCardsAmount,
   setSelectedCardsStatus,
 }: any) => {
@@ -26,7 +27,6 @@ const QuickActions = ({
 
     const nextStatus = statuses[nextIndex];
     setSelectedCardsStatus(nextStatus);
-    console.log(nextStatus);
   };
 
   const handleMarkAllCompleted = () => {
@@ -89,19 +89,50 @@ const QuickActions = ({
   ).length;
   const totalCount = technologies.length;
 
+  const [confirmMarkAll, setConfirmMarkAll] = useState(false);
+  const [confirmResetAll, setConfirmResetAll] = useState(false);
+
   return (
     <div className='quick-actions-wrapper'>
       <div className='quick-actions backgroundLiquid' ref={menuRef}>
         <div className='actions-grid' onClick={handleMenuClick}>
           <div
             className='action-btn completed'
-            onClick={handleMarkAllCompleted}
+            onClick={() => {
+              setConfirmMarkAll(true);
+            }}
             data-disabled={
               technologies.length === 0 || completedCount === totalCount
             }
           >
             <span className='action-text'>
               Mark All Completed
+              {confirmMarkAll && (
+                <span className='confirmation'>
+                  <div>Are you sure?</div>
+                  <div className='confirmation-buttons'>
+                    <span
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setConfirmMarkAll(false);
+                        handleMarkAllCompleted();
+                      }}
+                      className='confirm'
+                    >
+                      Yes
+                    </span>
+                    <span
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setConfirmMarkAll(false);
+                      }}
+                      className='cancel'
+                    >
+                      No
+                    </span>
+                  </div>
+                </span>
+              )}
               {technologies.length > 0 && (
                 <span className='action-count'>
                   ({completedCount}/{totalCount})
@@ -112,11 +143,39 @@ const QuickActions = ({
 
           <div
             className='action-btn reset'
-            onClick={handleResetAll}
+            onClick={() => {
+              setConfirmResetAll(true);
+            }}
             data-disabled={technologies.length === 0}
           >
             <span className='action-text'>
               Reset All
+              {confirmResetAll && (
+                <span className='confirmation'>
+                  <div>Are you sure?</div>
+                  <div className='confirmation-buttons'>
+                    <span
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setConfirmResetAll(false);
+                        handleResetAll();
+                      }}
+                      className='confirm'
+                    >
+                      Yes
+                    </span>
+                    <span
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setConfirmResetAll(false);
+                      }}
+                      className='cancel'
+                    >
+                      No
+                    </span>
+                  </div>
+                </span>
+              )}
               {technologies.length > 0 && (
                 <span className='action-count'>
                   ({totalCount - completedCount} active)
@@ -141,18 +200,18 @@ const QuickActions = ({
           </div>
           <div
             className={`action-btn select-cards ${
-              selectCards ? 'selected' : ''
+              selectMode ? 'selected' : ''
             }`}
-            onClick={handleSelectCards}
+            onClick={() => setSelectMode(!selectMode)}
             data-disabled={technologies.length === 0}
           >
             <span className='action-text'>
-              {selectCards ? 'Clear Selection' : 'Select Cards'}
-              {selectCards && (
+              {selectMode ? 'Clear Selection' : 'Select Cards'}
+              {selectMode && (
                 <div>
                   Mark Selected as
                   <div
-                    className={`status-badge`}
+                    className={`status-badge statusForSelect`}
                     onClick={(e) => {
                       e.stopPropagation();
                       handleStatusCycle();
@@ -180,13 +239,14 @@ const QuickActions = ({
       >
         <svg
           xmlns='http://www.w3.org/2000/svg'
-          width='12'
-          height='12'
-          viewBox='0 0 12 12'
+          width='512'
+          height='512'
+          viewBox='0 0 512 512'
         >
+          <title>Quick-slash SVG Icon</title>
           <path
             fill='currentColor'
-            d='M1 2.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m2 3a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5M5 8a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z'
+            d='M270.877 444.542C576.857 496.618 318.44 29.007 23.097 25.68C447.57-7.506 696.864 640.745 270.878 444.54z'
           />
         </svg>
       </div>

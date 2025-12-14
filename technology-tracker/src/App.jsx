@@ -8,10 +8,12 @@ import {
 import HomePage from './pages/Home';
 import Settings from './pages/Settings';
 import Statistics from './pages/Statistics';
+import Login from './pages/Login';
 import { NotificationProvider } from './components/NotificationProvider';
-import { useThemeMode } from './components/useThemeMode';
 import PageSwitcher from './components/PageSwitcher';
 import { TechnologiesProvider } from './context/TechnologiesContext';
+import { useThemeMode } from './context/ThemeModeContext';
+import RequireAuth from './components/RequireAuth';
 
 function HeaderTitle() {
   const location = useLocation();
@@ -35,7 +37,7 @@ function HeaderTitle() {
 }
 
 function App() {
-  const { theme, toggleMode, mode } = useThemeMode();
+  const { theme } = useThemeMode();
 
   return (
     <ThemeProvider theme={theme}>
@@ -46,26 +48,32 @@ function App() {
             <div className='app'>
               <HeaderTitle />
               <PageSwitcher />
-
-              <div
-                onClick={toggleMode}
-                style={{
-                  position: 'fixed',
-                  top: 10,
-                  right: 10,
-                  zIndex: 999,
-                  cursor: 'pointer',
-                }}
-                role='button'
-                tabIndex={0}
-              >
-                Switch to {mode === 'light' ? 'dark' : 'light'} mode
-              </div>
-
               <Routes>
-                <Route path='/' element={<HomePage />} />
-                <Route path='/settings' element={<Settings />} />
-                <Route path='/statistics' element={<Statistics />} />
+                <Route path='/login' element={<Login />} />
+                <Route
+                  path='/'
+                  element={
+                    <RequireAuth>
+                      <HomePage />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path='/settings'
+                  element={
+                    <RequireAuth>
+                      <Settings />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path='/statistics'
+                  element={
+                    <RequireAuth>
+                      <Statistics />
+                    </RequireAuth>
+                  }
+                />
               </Routes>
             </div>
           </Router>

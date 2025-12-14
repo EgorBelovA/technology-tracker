@@ -1,5 +1,5 @@
 import { useTech } from '../context/TechnologiesContext';
-import { useCallback } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
 
 export const ROADMAPS = [
   { id: 'ai-agents', label: 'AI Agents' },
@@ -84,5 +84,75 @@ export function useLoadRoadmap() {
     [handleJsonLoad, notify]
   );
 
-  return { ROADMAPS, loadRoadmap };
+  const normalizeAndValidateUrl = (value) => {
+    const trimmed = value.trim();
+
+    if (/\s/.test(trimmed)) return null;
+
+    try {
+      const url = trimmed.startsWith('http')
+        ? new URL(trimmed)
+        : new URL(`https://${trimmed}`);
+
+      if (!['http:', 'https:'].includes(url.protocol)) return null;
+
+      const host = url.hostname;
+
+      if (host === 'localhost') return url.href;
+
+      if (!host.includes('.')) return null;
+
+      if (host.startsWith('.') || host.endsWith('.') || host.includes('..')) {
+        return null;
+      }
+
+      return url.href;
+    } catch {
+      return null;
+    }
+  };
+
+  const abortRef = useRef(null);
+  const debounceRef = useRef(null);
+
+  const userUrlRoadmap = useCallback(
+    (roadmapUrl) => {
+      clearTimeout(debounceRef.current);
+
+      debounceRef.current = setTimeout(async () => {
+        if (!roadmapUrl.trim()) return;
+
+        const normalizedUrl = normalizeAndValidateUrl(roadmapUrl);
+        if (!normalizedUrl) return;
+
+        abortRef.current?.abort();
+        const controller = new AbortController();
+        abortRef.current = controller;
+
+        try {
+          const response = await fetch(normalizedUrl, {
+            signal: controller.signal,
+          });
+
+          if (!response.ok) return;
+
+          const jsonText = await response.text();
+          handleJsonLoad(jsonText);
+        } catch (err) {
+          if (err.name !== 'AbortError') {
+          }
+        }
+      }, 300);
+    },
+    [handleJsonLoad]
+  );
+
+  useEffect(() => {
+    return () => {
+      abortRef.current?.abort();
+      clearTimeout(debounceRef.current);
+    };
+  }, []);
+
+  return { ROADMAPS, loadRoadmap, userUrlRoadmap };
 }
