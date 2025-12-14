@@ -21,7 +21,6 @@
   font-style: italic;
 }
 
-/* Секция общего прогресса */
 .progress-section {
   margin-bottom: 20px;
 }
@@ -37,7 +36,7 @@
 .progress-bar {
   width: 100%;
   height: 10px;
-  background-color: #e8e8e9;
+  /* background-color: #e8e8e9; */
   border-radius: 10px;
   overflow: hidden;
   border: 0.5px solid #999;
@@ -50,7 +49,6 @@
   transition: width 0.3s ease;
 }
 
-/* Статистика по статусам */
 .status-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -90,6 +88,7 @@
   overflow: hidden;
   white-space: nowrap;
   font-weight: 500;
+  color: #333;
 }
 
 .stat-count {
@@ -101,7 +100,6 @@
   font-size: 0.9rem;
 }
 
-/* График распределения */
 .distribution-chart h4 {
   margin: 0 0 10px 0;
   color: #495057;
@@ -132,7 +130,6 @@
   background-color: #dc3545;
 }
 
-/* Адаптивность */
 @media (max-width: 768px) {
   .status-stats {
     grid-template-columns: 1fr;

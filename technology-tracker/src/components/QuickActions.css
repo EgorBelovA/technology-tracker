@@ -45,7 +45,7 @@
 
 .backgroundLiquid {
   border: 1px solid #e1e5e9;
-  background: rgba(232, 232, 233, 0.1);
+  /* background: inherit; */
   backdrop-filter: blur(5px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
@@ -131,7 +131,7 @@
 .filter-container svg,
 .scroll-up svg {
   cursor: pointer;
-  fill: #333;
+  /* fill: #333; */
   width: 20px;
   height: auto;
   aspect-ratio: 1 / 1;

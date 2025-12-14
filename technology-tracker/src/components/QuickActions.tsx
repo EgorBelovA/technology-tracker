@@ -11,10 +11,23 @@ const QuickActions = ({
   handleSelectCards,
   selectCards,
   selectedCardsAmount,
+  setSelectedCardsStatus,
 }: any) => {
   const [visible, setVisible] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const filterButtonRef = useRef<HTMLDivElement>(null);
+
+  const statuses = ['not-started', 'in-progress', 'completed'];
+  const [currentStatusIndex, setCurrentStatusIndex] = useState(0);
+
+  const handleStatusCycle = () => {
+    const nextIndex = (currentStatusIndex + 1) % statuses.length;
+    setCurrentStatusIndex(nextIndex);
+
+    const nextStatus = statuses[nextIndex];
+    setSelectedCardsStatus(nextStatus);
+    console.log(nextStatus);
+  };
 
   const handleMarkAllCompleted = () => {
     onUpdateAllStatuses('completed');
@@ -135,6 +148,20 @@ const QuickActions = ({
           >
             <span className='action-text'>
               {selectCards ? 'Clear Selection' : 'Select Cards'}
+              {selectCards && (
+                <div>
+                  Mark Selected as
+                  <div
+                    className={`status-badge`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleStatusCycle();
+                    }}
+                  >
+                    {statuses[currentStatusIndex].replace('-', ' ')}
+                  </div>
+                </div>
+              )}
               {technologies.length > 0 && (
                 <span className='action-count'>
                   ({selectedCardsAmount} selected)
@@ -157,7 +184,10 @@ const QuickActions = ({
           height='12'
           viewBox='0 0 12 12'
         >
-          <path d='M1 2.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m2 3a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5M5 8a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z' />
+          <path
+            fill='currentColor'
+            d='M1 2.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m2 3a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5M5 8a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z'
+          />
         </svg>
       </div>
     </div>

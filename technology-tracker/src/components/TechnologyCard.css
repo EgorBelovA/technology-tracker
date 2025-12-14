@@ -115,6 +115,8 @@
   border: 2px solid #999;
   border-bottom: 5px solid #999;
   padding: 20px 20px;
+  animation: appear 0.4s;
+  transform-origin: center top;
 
   &.narrow {
     max-width: calc(100% - 70px);
@@ -124,12 +126,23 @@
 
   &.full-size {
     width: 100%;
-    background-color: rgba(255, 255, 255, 0.5);
+    /* background-color: rgba(255, 255, 255, 0.5); */
   }
 
   &:hover {
     /* scale: 1.05; */
-    background-color: rgba(255, 255, 255, 0.5);
+    /* background-color: rgba(255, 255, 255, 0.5); */
+  }
+}
+
+@keyframes appear {
+  from {
+    opacity: 0;
+    scale: 0;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
   }
 }
 
@@ -205,14 +218,16 @@
 
 .card-header {
   text-align: center;
-  /* display: flex; */
-  /* justify-content: space-between; */
-  /* align-items: flex-start; */
+  /* display: flex;
+  justify-content: flex-start;
+  align-items: center; */
+  /* position: relative; */
 }
 
 .card-title {
   margin: 0;
-  color: #333;
+  /* position: absolute; */
+  /* color: #333; */
   font-size: 1.25rem;
   font-weight: 700;
   text-wrap: nowrap;
@@ -239,7 +254,7 @@
 }
 
 .description-text {
-  color: #666;
+  /* color: #333; */
 }
 
 .card-footer {
@@ -260,6 +275,7 @@ a {
 }
 
 .status-badge {
+  color: inherit;
   position: absolute;
   padding: 2px 4px;
   font-size: 0.7em;
@@ -274,6 +290,9 @@ a {
   outline: none;
   user-select: none;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .close-button {
@@ -284,14 +303,14 @@ a {
   text-align: center;
   font-size: 12px;
   overflow: hidden;
-  color: #000;
+  /* color: #000; */
   border-radius: 99rem;
   outline: 0.5px solid #999;
   background-color: transparent;
   cursor: pointer;
-  position: fixed;
-  top: 20px;
-  left: 20px;
+  position: absolute;
+  /* top: 20px;
+  left: 20px; */
 
   &:hover {
     background-color: rgba(0, 0, 0, 0.05);

@@ -1,33 +1,25 @@
 import './DataControls.css';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-function InputJson({ onJsonLoad, showExport }) {
+function InputJson({ onJsonLoad, showExport, setIsApi }) {
   const fileInputRef = useRef(null);
+  const [showOptions, setShowOptions] = useState(false);
 
   const handleDivClick = (e) => {
     e.stopPropagation();
+    setShowOptions(false);
     fileInputRef.current.click();
   };
 
   useEffect(() => {
-    const fileInputDiv = document.querySelector('.input-json');
     const fileExportDiv = document.querySelector('.export-json');
     if (showExport) {
-      fileInputDiv.classList.remove('hidden');
       fileExportDiv.classList.remove('hidden');
-      fileInputDiv.classList.add('animLeft');
       fileExportDiv.classList.add('animRight');
     }
   }, [showExport]);
 
   const handleFileChange = (event) => {
-    // const fileInputDiv = document.querySelector('.input-json');
-    // const fileExportDiv = document.querySelector('.export-json');
-
-    // fileInputDiv.classList.remove('hidden');
-    // fileExportDiv.classList.remove('hidden');
-    // fileInputDiv.classList.add('animLeft');
-    // fileExportDiv.classList.add('animRight');
     event.stopPropagation();
     const file = event.target.files[0];
     if (!file) return;
@@ -36,10 +28,13 @@ function InputJson({ onJsonLoad, showExport }) {
 
     reader.onload = (e) => {
       try {
-        const jsonData = JSON.parse(e.target.result);
-        onJsonLoad(jsonData);
+        onJsonLoad(e.target.result);
+
+        event.target.value = '';
       } catch (error) {
         console.error('Error parsing JSON:', error);
+
+        event.target.value = '';
       }
     };
 
@@ -47,8 +42,36 @@ function InputJson({ onJsonLoad, showExport }) {
   };
 
   return (
-    <div className='input-json hidden' onClick={handleDivClick}>
-      <span>Upload RoadMap File (JSON)</span>
+    <div
+      className={`input-json ${showExport ? 'hidden animLeft' : ''} ${
+        showOptions ? 'hideBackground' : 'hideBackground'
+      }`}
+      onClick={() => setShowOptions(true)}
+    >
+      <div
+        className={`input-json-option left ${
+          showOptions ? 'visible' : 'visible'
+        }`}
+        onClick={handleDivClick}
+      >
+        <div>
+          <span>Upload File</span>
+        </div>
+      </div>
+      <div
+        className={`input-json-option right ${
+          showOptions ? 'visible' : 'visible'
+        }`}
+        onClick={(e) => {
+          e.stopPropagation();
+          setShowOptions(false);
+          setIsApi(true);
+        }}
+      >
+        <div>
+          <span>API</span>
+        </div>
+      </div>
       <input
         type='file'
         accept='.json'

@@ -16,6 +16,16 @@ function TechnologyCard({
   );
   const markedRef = useRef(null);
 
+  const statuses = ['not-started', 'in-progress', 'completed'];
+
+  const handleStatusCycle = () => {
+    const currentIndex = statuses.indexOf(currentStatus);
+    const nextIndex = (currentIndex + 1) % statuses.length;
+    const nextStatus = statuses[nextIndex];
+    setCurrentStatus(nextStatus);
+    onStatusChange(id, nextStatus, deadline, progressNote);
+  };
+
   const handleStatusChange = (newStatus) => {
     setCurrentStatus(newStatus);
     onStatusChange(id, newStatus, deadline, progressNote);
@@ -93,11 +103,19 @@ function TechnologyCard({
   }, [selected, selectCards]);
 
   const cardRef = useRef(null);
-
   useEffect(() => {
-    if (showModal) {
+    if (showModal && cardRef.current) {
+      const headerHeight = 130;
+      const elementTop =
+        cardRef.current.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = elementTop - headerHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+
       cardRef.current.focus();
-      cardRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }, [showModal]);
 
@@ -156,26 +174,7 @@ function TechnologyCard({
         ref={cardRef}
       >
         <div className='card-header'>
-          <div className='card-title'>{title}</div>
-
-          <select
-            tabIndex={-1}
-            name='status-select'
-            value={currentStatus}
-            onChange={(e) => handleStatusChange(e.target.value)}
-            className='status-badge'
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <option value='not-started'>Not Started</option>
-            <option value='in-progress'>In Progress</option>
-            <option value='completed'>Completed</option>
-          </select>
-        </div>
-
-        {showModal && (
-          <div className='modal-overlay' onClick={() => setShowModal(false)}>
+          {showModal && (
             <div
               className='close-button'
               onClick={(e) => {
@@ -185,6 +184,21 @@ function TechnologyCard({
             >
               &#x2715;
             </div>
+          )}
+          <div className='card-title'>{title || 'No Title'}</div>
+          <div
+            className={`status-badge ${getStatusClass(currentStatus)}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleStatusCycle();
+            }}
+          >
+            {currentStatus.replace('-', ' ')}
+          </div>
+        </div>
+
+        {showModal && (
+          <div className='modal-overlay' onClick={() => setShowModal(false)}>
             <div className='modal' onClick={(e) => e.stopPropagation()}>
               {description && (
                 <div className='modal-description'>
@@ -207,7 +221,11 @@ function TechnologyCard({
                   </div>
                 </div>
               )}
-
+              {/* <TechnologyForm
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+              /> */}
               <div className='modal-form'>
                 <div className='modal-form-header'>Deadline & Notes</div>
                 <div className='form-container'>

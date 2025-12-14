@@ -10,14 +10,14 @@ function filterTechnologies(list, query) {
   );
 }
 
-export default function Search({ technologies, query, setQuery }) {
+export default function Search({ technologies, query, setQuery, placeholder }) {
   const filtered = filterTechnologies(technologies, query);
   return (
     <div className='search-container'>
       <input
         className='search-input'
         type='text'
-        placeholder='Search...'
+        placeholder={placeholder}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />

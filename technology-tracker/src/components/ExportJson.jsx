@@ -2,31 +2,27 @@ import './DataControls.css';
 
 function ExportJson({ jsonData, fileName = 'roadmap.json' }) {
   const handleExport = () => {
-    if (!jsonData) {
-      alert('No data to export');
-      return;
-    }
+    if (!jsonData) return alert('No data to export');
 
-    try {
-      const jsonString = JSON.stringify(jsonData, null, 2);
-      const blob = new Blob([jsonString], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
+    const blob = new Blob([JSON.stringify(jsonData, null, 2)], {
+      type: 'application/json',
+    });
+    const url = URL.createObjectURL(blob);
 
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = fileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Error exporting JSON:', error);
-      alert('Error exporting JSON file');
-    }
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    link.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
-    <div className='export-json hidden' onClick={handleExport}>
+    <div
+      className='export-json hidden'
+      onClick={handleExport}
+      role='button'
+      tabIndex={0}
+    >
       <span>Export RoadMap File (JSON)</span>
     </div>
   );
